@@ -9,7 +9,7 @@ on:
     paths:
 
 jobs:
-  test-vendor:
+  cmake-example:
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
@@ -18,9 +18,22 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt install -y gfortran python3-dev libomp-15-dev lcov intel-mkl
+      - name: Cache Crates
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./build
+          key: cmake-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: |
+            cmake-${{ runner.os }}
+            cmake
       - name: Run tests
         run: |
           mkdir build
           cd build
           cmake ..
           make
+          ./vsag-cmake-example
