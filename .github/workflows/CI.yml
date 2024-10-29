@@ -21,7 +21,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt install -y gfortran python3-dev libomp-15-dev lcov intel-mkl
-      - name: Cache Crates
+      - name: Cache builds
         uses: actions/cache@v4
         with:
           path: |
@@ -32,7 +32,7 @@ jobs:
             cmake
       - name: Run tests
         run: |
-          mkdir build
+          mkdir -p build
           cd build
           cmake ..
           make
